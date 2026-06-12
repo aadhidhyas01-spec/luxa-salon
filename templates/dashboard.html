@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | LUXA SALON{% endblock %}
+
+{% block content %}
+    <section class="section-padding">
+        <div class="container">
+            <div class="dashboard-grid">
+                
+                <!-- Sidebar User Profile details -->
+                <aside class="dashboard-sidebar">
+                    <div class="user-avatar flex-center">
+                        {{ current_user.name[0]|upper }}
+                    </div>
+                    <h2 class="user-name">{{ current_user.name }}</h2>
+                    <p class="user-email">Welcome back!</p>
+                    
+                    <ul class="sidebar-menu">
+                        <li class="sidebar-menu-item active">
+                            <a href="{{ url_for('dashboard') }}">Appointments</a>
+                        </li>
+                        {% if current_user.is_admin %}
+                            <li class="sidebar-menu-item">
+                                <a href="{{ url_for('admin') }}">Admin Console</a>
+                            </li>
+                        {% endif %}
+                        <li class="sidebar-menu-item">
+                            <a href="{{ url_for('logout') }}">Sign Out</a>
+                        </li>
+                    </ul>
+                </aside>
+                
+                <!-- Main Dashboard Appointments List -->
+                <main class="dashboard-content">
+                    <h1 class="dashboard-title">My Appointments</h1>
+                    
+                    {% if bookings %}
+                        <div class="booking-list">
+                            {% for booking in bookings %}
+                                <div class="booking-card">
+                                    <div class="booking-details">
+                                        <h3>{{ booking['service_name'] }}</h3>
+                                        <p style="color: var(--accent); font-weight: 500; font-size: 0.95rem; margin-bottom: 0.5rem;">{{ booking['salon_name'] }}</p>
+                                        
+                                        <div class="booking-meta">
+                                            <span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                                {{ booking['date'] }}
+                                            </span>
+                                            <span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                                {{ booking['time'] }}
+                                            </span>
+                                            <span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                                {{ booking['stylist'] }}
+                                            </span>
+                                            <span style="color: var(--primary); font-weight: 600;">
+                                                ₹{{ "{:,}".format(booking['service_price']) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="booking-actions">
+                                        <!-- Status Badge -->
+                                        <span class="status-badge status-{{ booking['status']|lower }}">
+                                            {{ booking['status'] }}
+                                        </span>
+                                        
+                                        {% if booking['status'] == 'Confirmed' or booking['status'] == 'Pending' %}
+                                            <form action="{{ url_for('cancel_booking', booking_id=booking['id']) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                                                <button type="submit" class="btn btn-outline" style="border-color: var(--error); color: var(--error); padding: 0.4rem 1rem; font-size: 0.75rem;">Cancel</button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="glass-panel" style="padding: 4rem 2rem; text-align: center; border: 1px dashed var(--border-light);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent); margin-bottom: 1.5rem;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                            <h3 style="margin-bottom: 0.5rem; font-family: var(--font-body); font-size: 1.25rem;">No Bookings Scheduled</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.95rem;">You don't have any upcoming or past reservation records.</p>
+                            <a href="{{ url_for('salons') }}" class="btn btn-primary">Find & Book a Salon</a>
+                        </div>
+                    {% endif %}
+                </main>
+                
+            </div>
+        </div>
+    </section>
+{% endblock %}

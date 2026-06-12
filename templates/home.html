@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}LUXA SALON | Premium Salons & Spas in Bangalore{% endblock %}
+
+{% block content %}
+    <!-- Hero Header -->
+    <header class="hero" style="background-image: url('{{ url_for('static', filename='images/salon_hero.png') }}');">
+        <div class="hero-content">
+            <h1>Discover Premium <span>Self-Care</span></h1>
+            <p>Book exclusive treatments at Bangalore's top-rated luxury grooming sanctuaries</p>
+            
+            <!-- Hero Search Form -->
+            <form action="{{ url_for('salons') }}" method="GET" class="search-container glass-panel">
+                <div class="search-input-group">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" name="search" placeholder="Search salons, treatments, or styles..." aria-label="Search">
+                </div>
+                
+                <div class="search-input-group">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <select name="area" aria-label="Area">
+                        <option value="">All Areas (Bangalore)</option>
+                        {% for area in all_areas %}
+                            <option value="{{ area }}">{{ area }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Find Salons</button>
+            </form>
+        </div>
+    </header>
+
+    <!-- Neighborhood / Area Highlights -->
+    <section class="section-padding">
+        <div class="container text-center">
+            <h2 class="section-title">Explore Elite Districts</h2>
+            <p class="section-subtitle">Premium grooming near you</p>
+            
+            <div class="quick-filter-container">
+                {% for area in all_areas %}
+                    <a href="{{ url_for('salons', area=area) }}" class="quick-filter-btn">
+                        {{ area }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Salons Showcase -->
+    <section class="section-padding" style="background-color: var(--bg-surface); border-top: 1px solid var(--border-light);">
+        <div class="container">
+            <div class="text-center">
+                <h2 class="section-title">Sanctuaries of Elegance</h2>
+                <p class="section-subtitle">Our featured luxury recommendations</p>
+            </div>
+            
+            <div class="salon-grid">
+                {% for salon in featured_salons %}
+                    <article class="salon-card">
+                        <div class="card-img-wrapper">
+                            <img src="{{ salon['image_path'] }}" alt="{{ salon['name'] }}">
+                            <div class="card-badge">{{ salon['price_range'] }}</div>
+                            <div class="card-rating">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                                <span>{{ salon['rating'] }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-content">
+                            <h3 class="card-title">{{ salon['name'] }}</h3>
+                            <div class="card-info">
+                                <span>{{ salon['area'] }}</span>
+                                <span>Premium Services</span>
+                            </div>
+                            <p class="card-desc">{{ salon['description'] }}</p>
+                            
+                            <div class="card-footer">
+                                <a href="{{ url_for('salon_detail', salon_id=salon['id']) }}" class="btn btn-outline" style="width: 100%; text-align: center;">View Atelier</a>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+            
+            <div class="text-center" style="margin-top: 4rem;">
+                <a href="{{ url_for('salons') }}" class="btn btn-primary">Browse All Salons</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

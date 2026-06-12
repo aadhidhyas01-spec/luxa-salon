@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: luxa-salon
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: SUPABASE_URL
+        value: https://ryewzzdytcehcizcqshc.supabase.co
+      - key: SUPABASE_ANON_KEY
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5ZXd6emR5dGNlaGNpemNxc2hjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5MTU5MjgsImV4cCI6MjA5NjQ5MTkyOH0.MpvvZc4wgX_M4dF4KvPBlVr98sRHbivjaY3HgBRZZ90
+      - key: SECRET_KEY
+        value: lux-salon-finder-super-secret-key-2026

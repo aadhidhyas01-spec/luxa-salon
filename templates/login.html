@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign In / Register | LUXA SALON{% endblock %}
+
+{% block content %}
+    <section class="auth-container flex-center">
+        <div class="container">
+            <div class="auth-card glass-panel">
+                
+                <!-- Brand Left Banner Column -->
+                <div class="auth-hero" style="background-image: url('{{ url_for('static', filename='images/salon_hero.png') }}');">
+                    <div class="auth-hero-content">
+                        <h2>Experience Luxury</h2>
+                        <p style="color: var(--text-secondary);">Unlock customized wellness tracking, stylist matching, and priority booking alerts across Bangalore's premier ateliers.</p>
+                    </div>
+                </div>
+                
+                <!-- Forms Right Column -->
+                <div class="auth-form-box">
+                    <div class="auth-tabs">
+                        <button class="auth-tab-btn active" onclick="switchAuthTab(event, 'login-form')">Sign In</button>
+                        <button class="auth-tab-btn" onclick="switchAuthTab(event, 'signup-form')">Register</button>
+                    </div>
+                    
+                    <!-- Login Form -->
+                    <form action="{{ url_for('login', next=request.args.get('next', '')) }}" method="POST" class="auth-form active" id="login-form">
+                        <div class="form-group">
+                            <label for="login-email">Email Address</label>
+                            <input type="email" name="email" id="login-email" class="form-control" placeholder="name@example.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input type="password" name="password" id="login-password" class="form-control" placeholder="Enter password" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" style="margin-top: 1rem; width: 100%;">Sign In</button>
+                        <div style="margin-top: 1rem; text-align: center;">
+                            <a href="{{ url_for('login', next='admin/select') }}" class="btn btn-primary" style="font-size:0.85rem; padding:0.4rem 0.8rem;">Admin Login</a>
+                        </div>
+                    </form>
+                    
+                    <!-- Signup Form -->
+                    <form action="{{ url_for('signup') }}" method="POST" class="auth-form" id="signup-form">
+                        <div class="form-group">
+                            <label for="reg-name">Full Name</label>
+                            <input type="text" name="name" id="reg-name" class="form-control" placeholder="Aarav Sharma" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg-email">Email Address</label>
+                            <input type="email" name="email" id="reg-email" class="form-control" placeholder="aarav@example.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg-phone">Phone Number</label>
+                            <input type="tel" name="phone" id="reg-phone" class="form-control" placeholder="+91 99887 76655" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reg-password">Password</label>
+                            <input type="password" name="password" id="reg-password" class="form-control" placeholder="Create strong password" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" style="margin-top: 1rem; width: 100%;">Create Account</button>
+                    </form>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function switchAuthTab(evt, formId) {
+            // Remove active classes
+            const forms = document.getElementsByClassName('auth-form');
+            for (let form of forms) {
+                form.classList.remove('active');
+            }
+            
+            const buttons = document.getElementsByClassName('auth-tab-btn');
+            for (let btn of buttons) {
+                btn.classList.remove('active');
+            }
+            
+            // Activate selection
+            document.getElementById(formId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+    </script>
+{% endblock %}

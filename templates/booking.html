@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+
+{% block title %}Book {{ service['name'] }} | {{ salon['name'] }}{% endblock %}
+
+{% block content %}
+    <section class="section-padding">
+        <div class="container">
+            <div class="booking-flow-card glass-panel">
+                
+                <div class="booking-flow-header">
+                    <h2>Book Appointment</h2>
+                    <p style="color: var(--accent); font-weight: 500;">{{ service['name'] }} at {{ salon['name'] }}</p>
+                </div>
+                
+                <!-- Progress Stepper -->
+                <div class="stepper">
+                    <div class="step-node active" id="step-node-1">
+                        <div class="step-circle">1</div>
+                        <div class="step-label">Stylist</div>
+                    </div>
+                    <div class="step-node" id="step-node-2">
+                        <div class="step-circle">2</div>
+                        <div class="step-label">Schedule</div>
+                    </div>
+                    <div class="step-node" id="step-node-3">
+                        <div class="step-circle">3</div>
+                        <div class="step-label">Checkout</div>
+                    </div>
+                </div>
+                
+                <!-- Step Panels Form -->
+                <form action="{{ url_for('book', service_id=service['id']) }}" method="POST" id="booking-form">
+                    
+                    <!-- STEP 1: STYLIST SELECT -->
+                    <div class="booking-step-panel active" id="step-panel-1">
+                        <h3 style="font-family: var(--font-body); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 0.5rem;">Select Preferred Stylist</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">Choose a professional based on expertise level</p>
+                        
+                        <div class="form-group" style="gap: 1.2rem;">
+                            {% for stylist in stylists %}
+                                <label class="filter-radio-label" style="background-color: var(--bg-main); border: 1px solid var(--border-light); padding: 1.2rem; cursor: pointer; transition: var(--transition-smooth); display: flex; align-items: center;">
+                                    <input type="radio" name="stylist" value="{{ stylist }}" {% if loop.last %}checked{% endif %} style="margin-right: 1rem;">
+                                    <div>
+                                        <strong style="display: block; font-size: 1rem; color: var(--text-primary);">{{ stylist }}</strong>
+                                        <span style="font-size: 0.8rem; color: var(--text-secondary);">
+                                            {% if 'Director' in stylist %}
+                                                Art Directors have over 10 years of runway and editorial expertise (+₹500 on checkout)
+                                            {% elif 'Senior' in stylist %}
+                                                Senior Stylists have over 5 years of precision craft experience (+₹200 on checkout)
+                                            {% elif 'Consultant' in stylist %}
+                                                Creative consultants offer advanced style customizations
+                                            {% else %}
+                                                We will assign the best available expert for your timing
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </label>
+                            {% endfor %}
+                        </div>
+                        
+                        <div style="display: flex; justify-content: flex-end; margin-top: 2rem;">
+                            <button type="button" class="btn btn-primary" onclick="goToStep(2)">Next: Schedule</button>
+                        </div>
+                    </div>
+                    
+                    <!-- STEP 2: SCHEDULE (DATE & TIME) -->
+                    <div class="booking-step-panel" id="step-panel-2">
+                        <h3 style="font-family: var(--font-body); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 0.5rem;">Choose Date & Time</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">Appointments are booked in 30-minute blocks</p>
+                        
+                        <div class="form-group" style="margin-bottom: 2rem;">
+                            <label for="date">Select Appointment Date</label>
+                            <input type="date" id="date" name="date" class="form-control" required style="width: 100%; font-size: 1rem;">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Select Preferred Time Slot</label>
+                            <input type="hidden" name="time" id="selected-time">
+                            
+                            <div class="time-slots-grid">
+                                <div class="time-slot-btn" onclick="selectTime('09:30 AM')">09:30 AM</div>
+                                <div class="time-slot-btn" onclick="selectTime('11:00 AM')">11:00 AM</div>
+                                <div class="time-slot-btn" onclick="selectTime('12:30 PM')">12:30 PM</div>
+                                <div class="time-slot-btn" onclick="selectTime('02:00 PM')">02:00 PM</div>
+                                <div class="time-slot-btn" onclick="selectTime('03:30 PM')">03:30 PM</div>
+                                <div class="time-slot-btn" onclick="selectTime('05:00 PM')">05:00 PM</div>
+                                <div class="time-slot-btn" onclick="selectTime('06:30 PM')">06:30 PM</div>
+                                <div class="time-slot-btn" onclick="selectTime('08:00 PM')">08:00 PM</div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; margin-top: 2.5rem;">
+                            <button type="button" class="btn btn-secondary" onclick="goToStep(1)">Back</button>
+                            <button type="button" class="btn btn-primary" onclick="goToStep(3)">Next: Checkout</button>
+                        </div>
+                    </div>
+                    
+                    <!-- STEP 3: CHECKOUT SUMMARY & SUBMIT -->
+                    <div class="booking-step-panel" id="step-panel-3">
+                        <h3 style="font-family: var(--font-body); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 0.5rem;">Review Booking & Details</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">Please check booking details before finalizing payment details</p>
+                        
+                        <div class="summary-box">
+                            <div class="summary-row">
+                                <span>Salon Atelier</span>
+                                <strong id="summary-salon">{{ salon['name'] }}</strong>
+                            </div>
+                            <div class="summary-row">
+                                <span>Service Requested</span>
+                                <strong>{{ service['name'] }}</strong>
+                            </div>
+                            <div class="summary-row">
+                                <span>Selected Stylist</span>
+                                <strong id="summary-stylist">-</strong>
+                            </div>
+                            <div class="summary-row">
+                                <span>Schedule</span>
+                                <strong id="summary-schedule">-</strong>
+                            </div>
+                            <div class="summary-row" style="margin-top: 0.5rem; border-top: 1px dashed var(--border-light); padding-top: 0.5rem;">
+                                <span>Service Base Price</span>
+                                <strong>₹{{ "{:,}".format(service['price']) }}</strong>
+                            </div>
+                            <div class="summary-row">
+                                <span>Stylist Premium Fee</span>
+                                <strong id="summary-stylist-fee">₹0</strong>
+                            </div>
+                            <div class="summary-row">
+                                <span>Taxes & GST (18%)</span>
+                                <strong id="summary-tax">₹0</strong>
+                            </div>
+                            <div class="summary-row total">
+                                <span>Grand Total (Pay at Salon)</span>
+                                <span id="summary-total">₹{{ "{:,}".format(service['price']) }}</span>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; margin-top: 2.5rem;">
+                            <button type="button" class="btn btn-secondary" onclick="goToStep(2)">Back</button>
+                            <button type="submit" class="btn btn-primary">Confirm Reservation</button>
+                        </div>
+                    </div>
+                    
+                </form>
+                
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        // Set date input minimum value to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('date').min = today;
+        document.getElementById('date').value = today;
+
+        let currentStep = 1;
+        const basePrice = {{ service['price'] }};
+
+        function selectTime(timeStr) {
+            document.getElementById('selected-time').value = timeStr;
+            
+            // Toggle active buttons style
+            const buttons = document.querySelectorAll('.time-slot-btn');
+            buttons.forEach(btn => {
+                if (btn.innerText === timeStr) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            });
+        }
+
+        function goToStep(stepNum) {
+            // Validate step transitions
+            if (stepNum === 2 && currentStep === 1) {
+                // Ensure stylist is checked
+                const stylistChecked = document.querySelector('input[name="stylist"]:checked');
+                if (!stylistChecked) {
+                    alert('Please select a stylist to proceed.');
+                    return;
+                }
+            }
+            if (stepNum === 3 && currentStep === 2) {
+                // Validate date and time slot
+                const dateVal = document.getElementById('date').value;
+                const timeVal = document.getElementById('selected-time').value;
+                if (!dateVal || !timeVal) {
+                    alert('Please select both a date and a time slot to proceed.');
+                    return;
+                }
+                
+                // Compile Summary Card Data
+                const selectedStylist = document.querySelector('input[name="stylist"]:checked').value;
+                document.getElementById('summary-stylist').innerText = selectedStylist;
+                
+                const formattedDate = new Date(dateVal).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+                document.getElementById('summary-schedule').innerText = `${formattedDate} @ ${timeVal}`;
+                
+                // Compute Stylist Fees
+                let stylistFee = 0;
+                if (selectedStylist.includes('Director')) {
+                    stylistFee = 500;
+                } else if (selectedStylist.includes('Senior')) {
+                    stylistFee = 200;
+                }
+                
+                const tax = Math.round((basePrice + stylistFee) * 0.18);
+                const grandTotal = basePrice + stylistFee + tax;
+                
+                document.getElementById('summary-stylist-fee').innerText = `₹${stylistFee.toLocaleString('en-IN')}`;
+                document.getElementById('summary-tax').innerText = `₹${tax.toLocaleString('en-IN')}`;
+                document.getElementById('summary-total').innerText = `₹${grandTotal.toLocaleString('en-IN')}`;
+            }
+
+            // Move step UI
+            document.getElementById(`step-panel-${currentStep}`).classList.remove('active');
+            document.getElementById(`step-panel-${stepNum}`).classList.add('active');
+            
+            // Adjust step nodes active/completed
+            for (let i = 1; i <= 3; i++) {
+                const node = document.getElementById(`step-node-${i}`);
+                if (i < stepNum) {
+                    node.classList.add('completed');
+                    node.classList.remove('active');
+                } else if (i === stepNum) {
+                    node.classList.add('active');
+                    node.classList.remove('completed');
+                } else {
+                    node.classList.remove('active', 'completed');
+                }
+            }
+            
+            currentStep = stepNum;
+        }
+
+        // Programmatic validation to prevent silent browser blocking on hidden required inputs
+        document.getElementById('booking-form').addEventListener('submit', function(e) {
+            const dateVal = document.getElementById('date').value;
+            const timeVal = document.getElementById('selected-time').value;
+            if (!dateVal || !timeVal) {
+                e.preventDefault();
+                alert('Please ensure you have selected a date and a time slot before confirming.');
+            }
+        });
+    </script>
+{% endblock %}

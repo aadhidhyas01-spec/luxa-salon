@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LUXA SALON | Bangalore's Finest Grooming & Wellness{% endblock %}</title>
+    <meta name="description" content="Discover and book bespoke luxury beauty salons and holistic wellness sanctuaries in Indiranagar, Lavelle Road, Koramangala, and Sadashivanagar.">
+    <!-- Premium Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+
+    <!-- Flash Messages -->
+    <div class="flash-messages" id="flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category if category != 'error' else 'danger' }}">
+                        <span>{{ message }}</span>
+                        <span class="close-alert" onclick="this.parentElement.remove()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </span>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Sticky Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="{{ url_for('index') }}" class="logo-brand">
+                SALON<span>LUX</span>
+            </a>
+            
+            <ul class="nav-menu">
+                <li><a href="{{ url_for('index') }}" class="nav-link {% if request.path == '/' %}active{% endif %}">Home</a></li>
+                <li><a href="{{ url_for('salons') }}" class="nav-link {% if request.path == '/salons' %}active{% endif %}">Salons</a></li>
+                
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('dashboard') }}" class="nav-link {% if request.path == '/dashboard' %}active{% endif %}">My Bookings</a></li>
+                    {% if current_user.is_admin %}
+                        <li><a href="{{ url_for('admin') }}" class="nav-link {% if request.path == '/admin' %}active{% endif %}">Admin</a></li>
+                    {% endif %}
+                    <li><a href="{{ url_for('logout') }}" class="btn btn-outline" style="padding: 0.5rem 1.2rem; font-size: 0.8rem;">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}" class="btn btn-primary" style="padding: 0.5rem 1.5rem; font-size: 0.8rem;">Sign In</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content Block -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Luxury Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column footer-about">
+                    <a href="{{ url_for('index') }}" class="logo-brand">
+                        SALON<span>LUX</span>
+                    </a>
+                    <p>
+                        A curated catalog of Bangalore's most exclusive grooming ateliers and wellness sanctuaries. Uncompromising beauty, elite art directors, and holistic treatments.
+                    </p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Explore Areas</h3>
+                    <ul class="footer-links">
+                        <li><a href="{{ url_for('salons', area='Indiranagar') }}">Indiranagar</a></li>
+                        <li><a href="{{ url_for('salons', area='Lavelle Road') }}">Lavelle Road</a></li>
+                        <li><a href="{{ url_for('salons', area='Koramangala') }}">Koramangala</a></li>
+                        <li><a href="{{ url_for('salons', area='Sadashivanagar') }}">Sadashivanagar</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="{{ url_for('index') }}">Home</a></li>
+                        <li><a href="{{ url_for('salons') }}">Salons Directory</a></li>
+                        <li><a href="{{ url_for('login') }}">Sign In / Register</a></li>
+                        <li><a href="{{ url_for('admin') }}">Admin Panel</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 LUXA SALON India. All Rights Reserved. Crafted for premium self-care.</p>
+                <p>Indulgence, Defined.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Core Javascript Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+    <script>
+        // Auto-remove alerts after 5 seconds
+        setTimeout(function() {
+            const container = document.getElementById('flash-container');
+            if (container) {
+                const alerts = container.getElementsByClassName('alert');
+                for (let alert of alerts) {
+                    alert.style.transition = 'opacity 0.5s ease-out';
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 500);
+                }
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

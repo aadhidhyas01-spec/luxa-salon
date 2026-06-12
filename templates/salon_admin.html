@@ -1,0 +1,647 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ salon['name'] }} — Salon Admin | LUXA SALON{% endblock %}
+
+{% block head %}
+<style>
+    /* ── Page header banner ── */
+    .salon-admin-hero {
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1410 50%, #0d0d0d 100%);
+        border-bottom: 1px solid var(--border-light);
+        padding: 3rem 0 2.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .salon-admin-hero::before {
+        content: '';
+        position: absolute;
+        top: -40%;
+        right: -10%;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(212,175,55,0.07) 0%, transparent 65%);
+        pointer-events: none;
+    }
+    .salon-hero-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+    .salon-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(212,175,55,0.1);
+        border: 1px solid rgba(212,175,55,0.3);
+        color: var(--primary);
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 0.3rem 0.8rem;
+        margin-bottom: 0.8rem;
+    }
+    .salon-hero-title {
+        font-family: var(--font-heading);
+        font-size: 2.4rem;
+        color: var(--text-primary);
+        margin-bottom: 0.3rem;
+    }
+    .salon-hero-meta {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        flex-wrap: wrap;
+    }
+    .salon-hero-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .salon-hero-meta svg {
+        color: var(--primary);
+        flex-shrink: 0;
+    }
+
+    /* ── Stats strip ── */
+    .stats-strip {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 1px;
+        background: var(--border-light);
+        border: 1px solid var(--border-light);
+        margin: 2.5rem 0;
+    }
+    .stat-cell {
+        background: var(--bg-surface);
+        padding: 1.5rem;
+        text-align: center;
+        transition: background 0.25s;
+    }
+    .stat-cell:hover { background: var(--bg-card); }
+    .stat-number {
+        font-family: var(--font-heading);
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+    .stat-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-secondary);
+        margin-top: 0.3rem;
+    }
+
+    /* ── Toolbar ── */
+    .toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+    }
+    .toolbar-title {
+        font-family: var(--font-body);
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+    .toolbar-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+    .search-field {
+        position: relative;
+    }
+    .search-field svg {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+        pointer-events: none;
+    }
+    .search-field input {
+        padding: 0.55rem 0.9rem 0.55rem 2.4rem;
+        font-size: 0.875rem;
+        width: 240px;
+    }
+    .pill-filter {
+        background: transparent;
+        border: 1px solid var(--border-light);
+        color: var(--text-secondary);
+        padding: 0.45rem 1rem;
+        font-family: var(--font-body);
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+        border-radius: 0;
+    }
+    .pill-filter:hover,
+    .pill-filter.active {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: rgba(212,175,55,0.06);
+    }
+
+    /* ── Booking card layout ── */
+    .booking-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        background: var(--border-light);
+        border: 1px solid var(--border-light);
+    }
+    .bk-card {
+        background: var(--bg-surface);
+        padding: 1.4rem 1.6rem;
+        display: grid;
+        grid-template-columns: 40px 1fr 1fr 130px 100px 130px 130px;
+        align-items: center;
+        gap: 1.2rem;
+        transition: background 0.2s;
+        cursor: default;
+    }
+    .bk-card:hover { background: var(--bg-card); }
+    .bk-card-header {
+        background: var(--bg-card);
+        padding: 0.65rem 1.6rem;
+        display: grid;
+        grid-template-columns: 40px 1fr 1fr 130px 100px 130px 130px;
+        align-items: center;
+        gap: 1.2rem;
+    }
+    .bk-head-label {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--accent);
+        font-weight: 700;
+    }
+    .bk-id {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        font-weight: 600;
+    }
+    .bk-client-name {
+        font-weight: 600;
+        font-size: 0.93rem;
+        color: var(--text-primary);
+        margin-bottom: 0.1rem;
+    }
+    .bk-client-sub {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+    }
+    .bk-service-name {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.1rem;
+    }
+    .bk-service-sub {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+    }
+    .bk-schedule-date {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+    .bk-schedule-time {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin-top: 0.15rem;
+    }
+    .bk-price {
+        font-family: var(--font-heading);
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    /* Status badge inline */
+    .status-badge {
+        padding: 0.25rem 0.7rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border: 1px solid transparent;
+        white-space: nowrap;
+    }
+    .status-confirmed  { background: rgba(39,174,96,0.12);  color: var(--success); border-color: var(--success); }
+    .status-pending    { background: rgba(243,156,18,0.12);  color: var(--warning); border-color: var(--warning); }
+    .status-cancelled  { background: rgba(192,57,43,0.12);   color: var(--error);   border-color: var(--error); }
+
+    /* Inline status changer */
+    .status-form {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .status-select {
+        background: var(--bg-main);
+        border: 1px solid var(--border-light);
+        color: var(--text-primary);
+        padding: 0.3rem 0.5rem;
+        font-family: var(--font-body);
+        font-size: 0.78rem;
+        outline: none;
+        cursor: pointer;
+    }
+    .status-select:focus { border-color: var(--primary); }
+    .btn-apply {
+        background: transparent;
+        border: 1px solid var(--primary);
+        color: var(--primary);
+        padding: 0.3rem 0.7rem;
+        font-size: 0.75rem;
+        font-family: var(--font-body);
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+    }
+    .btn-apply:hover {
+        background: var(--primary);
+        color: var(--text-dark);
+    }
+
+    /* Expanded customer detail panel */
+    .expand-btn {
+        background: transparent;
+        border: 1px solid var(--border-light);
+        color: var(--text-secondary);
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+        flex-shrink: 0;
+        font-size: 0.75rem;
+    }
+    .expand-btn:hover,
+    .bk-card.open .expand-btn {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+    .detail-panel {
+        background: var(--bg-main);
+        border-left: 3px solid var(--primary);
+        padding: 1.5rem 1.8rem;
+        display: none;
+        animation: fadeSlide 0.2s ease-out;
+    }
+    .detail-panel.open { display: block; }
+    @keyframes fadeSlide {
+        from { opacity: 0; transform: translateY(-6px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+    }
+    .detail-group h5 {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--accent);
+        margin-bottom: 0.9rem;
+        padding-bottom: 0.45rem;
+        border-bottom: 1px solid var(--border-light);
+    }
+    .detail-row {
+        display: flex;
+        gap: 0.5rem;
+        font-size: 0.84rem;
+        margin-bottom: 0.55rem;
+        color: var(--text-secondary);
+    }
+    .detail-row strong {
+        min-width: 80px;
+        color: var(--text-primary);
+        flex-shrink: 0;
+    }
+
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 5rem 2rem;
+        color: var(--text-secondary);
+        background: var(--bg-surface);
+        border: 1px solid var(--border-light);
+    }
+    .empty-state svg { color: var(--border-light); margin-bottom: 1.5rem; }
+    .empty-state h3 { color: var(--text-primary); margin-bottom: 0.5rem; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+        .bk-card,
+        .bk-card-header {
+            grid-template-columns: 32px 1fr 1fr;
+            grid-auto-rows: auto;
+        }
+        .bk-card > *:nth-child(n+4),
+        .bk-card-header > *:nth-child(n+4) {
+            grid-column: auto;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+{% set ns = namespace(total=0, confirmed=0, pending=0, cancelled=0, revenue=0) %}
+{% for b in bookings %}
+    {% set ns.total = ns.total + 1 %}
+    {% if b.status == 'Confirmed' %}
+        {% set ns.confirmed = ns.confirmed + 1 %}
+        {% set ns.revenue = ns.revenue + b.service_price %}
+    {% elif b.status == 'Pending' %}
+        {% set ns.pending = ns.pending + 1 %}
+    {% elif b.status == 'Cancelled' %}
+        {% set ns.cancelled = ns.cancelled + 1 %}
+    {% endif %}
+{% endfor %}
+
+<!-- ── Hero Banner ── -->
+<div class="salon-admin-hero">
+    <div class="container">
+        <div class="salon-hero-inner">
+            <div>
+                <div class="salon-hero-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    Salon Admin Panel
+                </div>
+                <h1 class="salon-hero-title">{{ salon['name'] }}</h1>
+                <div class="salon-hero-meta">
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        {{ salon['area'] }}
+                    </span>
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        {{ salon['rating'] }} Rating
+                    </span>
+                    <span style="color: var(--primary); font-weight: 600;">{{ salon['price_range'] }}</span>
+                </div>
+            </div>
+            <div style="display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap;">
+                <a href="{{ url_for('salons') }}" class="btn btn-outline" style="font-size:0.82rem; padding:0.5rem 1.2rem;">
+                    View Live Page
+                </a>
+                <a href="{{ url_for('admin') }}" class="btn btn-outline" style="font-size:0.82rem; padding:0.5rem 1.2rem;">
+                    ← Back to Admin
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Main Content ── -->
+<section style="padding: 2.5rem 0 4rem;">
+    <div class="container">
+
+        <!-- Stats Strip -->
+        <div class="stats-strip">
+            <div class="stat-cell">
+                <div class="stat-number">{{ ns.total }}</div>
+                <div class="stat-label">Total Bookings</div>
+            </div>
+            <div class="stat-cell">
+                <div class="stat-number" style="color: var(--success);">{{ ns.confirmed }}</div>
+                <div class="stat-label">Confirmed</div>
+            </div>
+            <div class="stat-cell">
+                <div class="stat-number" style="color: var(--warning);">{{ ns.pending }}</div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <div class="stat-cell">
+                <div class="stat-number" style="color: var(--error);">{{ ns.cancelled }}</div>
+                <div class="stat-label">Cancelled</div>
+            </div>
+            <div class="stat-cell">
+                <div class="stat-number">₹{{ "{:,}".format(ns.revenue) }}</div>
+                <div class="stat-label">Confirmed Revenue</div>
+            </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="toolbar-title">Customer Appointments</div>
+            <div class="toolbar-controls">
+                <div class="search-field">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="sa-search" class="form-control" placeholder="Search name, email, service…" oninput="saFilter()">
+                </div>
+                <div id="sa-pills" style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+                    <button class="pill-filter active" onclick="saStatus('ALL',this)">All</button>
+                    <button class="pill-filter" onclick="saStatus('CONFIRMED',this)">Confirmed</button>
+                    <button class="pill-filter" onclick="saStatus('PENDING',this)">Pending</button>
+                    <button class="pill-filter" onclick="saStatus('CANCELLED',this)">Cancelled</button>
+                </div>
+            </div>
+        </div>
+
+        {% if bookings %}
+        <!-- Header Row -->
+        <div class="bk-card-header">
+            <div class="bk-head-label">#</div>
+            <div class="bk-head-label">Customer</div>
+            <div class="bk-head-label">Service</div>
+            <div class="bk-head-label">Schedule</div>
+            <div class="bk-head-label">Amount</div>
+            <div class="bk-head-label">Status</div>
+            <div class="bk-head-label">Manage</div>
+        </div>
+
+        <!-- Booking Cards -->
+        <div class="booking-cards" id="sa-list">
+            {% for b in bookings %}
+            <div class="sa-booking-block"
+                 data-status="{{ b.status|upper }}"
+                 data-search="{{ (b.user_name ~ ' ' ~ b.user_email ~ ' ' ~ b.user_phone ~ ' ' ~ b.service_name ~ ' ' ~ b.stylist)|lower }}">
+
+                <!-- Main row -->
+                <div class="bk-card" id="card-{{ b.id }}">
+                    <!-- Expand toggle -->
+                    <button class="expand-btn" onclick="toggleDetail({{ b.id }})" title="View customer details" aria-label="Expand">
+                        <svg id="icon-{{ b.id }}" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+
+                    <!-- Customer -->
+                    <div>
+                        <div class="bk-client-name">{{ b.user_name }}</div>
+                        <div class="bk-client-sub">{{ b.user_email }}</div>
+                        <div class="bk-client-sub">{{ b.user_phone }}</div>
+                    </div>
+
+                    <!-- Service -->
+                    <div>
+                        <div class="bk-service-name">{{ b.service_name }}</div>
+                        <div class="bk-service-sub">Stylist: {{ b.stylist }}</div>
+                    </div>
+
+                    <!-- Schedule -->
+                    <div>
+                        <div class="bk-schedule-date">{{ b.date }}</div>
+                        <div class="bk-schedule-time">{{ b.time }}</div>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="bk-price">₹{{ "{:,}".format(b.service_price) }}</div>
+
+                    <!-- Status badge -->
+                    <div>
+                        <span class="status-badge status-{{ b.status|lower }}">{{ b.status }}</span>
+                    </div>
+
+                    <!-- Quick status change -->
+                    <form action="{{ url_for('salon_admin', salon_id=salon['id']) }}" method="POST" class="status-form">
+                        <input type="hidden" name="action" value="update_booking_status">
+                        <input type="hidden" name="booking_id" value="{{ b.id }}">
+                        <select name="status" class="status-select">
+                            <option value="Pending"   {% if b.status=='Pending'   %}selected{% endif %}>Pending</option>
+                            <option value="Confirmed" {% if b.status=='Confirmed' %}selected{% endif %}>Confirmed</option>
+                            <option value="Cancelled" {% if b.status=='Cancelled' %}selected{% endif %}>Cancelled</option>
+                        </select>
+                        <button type="submit" class="btn-apply">Apply</button>
+                    </form>
+                </div>
+
+                <!-- Expanded customer detail panel -->
+                <div class="detail-panel" id="detail-{{ b.id }}">
+                    <div class="detail-grid">
+                        <div class="detail-group">
+                            <h5>👤 Customer Profile</h5>
+                            <div class="detail-row"><strong>Name</strong>{{ b.user_name }}</div>
+                            <div class="detail-row"><strong>Email</strong>{{ b.user_email }}</div>
+                            <div class="detail-row"><strong>Phone</strong>{{ b.user_phone }}</div>
+                            <div class="detail-row"><strong>Customer ID</strong>#{{ b.user_id }}</div>
+                        </div>
+                        <div class="detail-group">
+                            <h5>✂️ Appointment Info</h5>
+                            <div class="detail-row"><strong>Service</strong>{{ b.service_name }}</div>
+                            <div class="detail-row"><strong>Stylist</strong>{{ b.stylist }}</div>
+                            <div class="detail-row"><strong>Date</strong>{{ b.date }}</div>
+                            <div class="detail-row"><strong>Time</strong>{{ b.time }}</div>
+                            <div class="detail-row"><strong>Price</strong>₹{{ "{:,}".format(b.service_price) }}</div>
+                        </div>
+                        <div class="detail-group">
+                            <h5>📋 Booking Status</h5>
+                            <div class="detail-row"><strong>Booking #</strong>{{ b.id }}</div>
+                            <div class="detail-row">
+                                <strong>Status</strong>
+                                <span class="status-badge status-{{ b.status|lower }}">{{ b.status }}</span>
+                            </div>
+                            <div class="detail-row" style="margin-top:1rem; flex-direction:column; gap:0.6rem;">
+                                <form action="{{ url_for('salon_admin', salon_id=salon['id']) }}" method="POST" style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+                                    <input type="hidden" name="action" value="update_booking_status">
+                                    <input type="hidden" name="booking_id" value="{{ b.id }}">
+                                    <select name="status" class="status-select">
+                                        <option value="Pending"   {% if b.status=='Pending'   %}selected{% endif %}>Pending</option>
+                                        <option value="Confirmed" {% if b.status=='Confirmed' %}selected{% endif %}>Confirmed</option>
+                                        <option value="Cancelled" {% if b.status=='Cancelled' %}selected{% endif %}>Cancelled</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary" style="padding:0.35rem 1rem; font-size:0.8rem;">Update Status</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /.sa-booking-block -->
+            {% endfor %}
+        </div><!-- /#sa-list -->
+
+        <!-- No results message -->
+        <p id="sa-no-match" style="display:none; text-align:center; color:var(--text-secondary); padding:3rem 0;">
+            No appointments match your filters.
+        </p>
+
+        {% else %}
+        <div class="empty-state">
+            <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <h3>No Appointments Yet</h3>
+            <p>When customers book services at {{ salon['name'] }}, their appointments will appear here.</p>
+            <a href="{{ url_for('salons') }}" class="btn btn-primary" style="margin-top:1.5rem; display:inline-block;">View Salon Page</a>
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let saStatusFilter = 'ALL';
+    let saSearchText   = '';
+
+    function toggleDetail(id) {
+        const panel = document.getElementById('detail-' + id);
+        const icon  = document.getElementById('icon-' + id);
+        const card  = document.getElementById('card-' + id);
+        const isOpen = panel.classList.contains('open');
+
+        // Close all others first
+        document.querySelectorAll('.detail-panel').forEach(p => p.classList.remove('open'));
+        document.querySelectorAll('.bk-card').forEach(c => c.classList.remove('open'));
+        document.querySelectorAll('[id^="icon-"]').forEach(i => {
+            i.style.transform = '';
+        });
+
+        if (!isOpen) {
+            panel.classList.add('open');
+            card.classList.add('open');
+            icon.style.transform = 'rotate(180deg)';
+        }
+    }
+
+    function saStatus(status, btn) {
+        document.querySelectorAll('.pill-filter').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        saStatusFilter = status;
+        applyFilters();
+    }
+
+    function saFilter() {
+        saSearchText = document.getElementById('sa-search').value.toLowerCase();
+        applyFilters();
+    }
+
+    function applyFilters() {
+        const blocks = document.querySelectorAll('.sa-booking-block');
+        let visible = 0;
+        blocks.forEach(block => {
+            const status  = block.dataset.status;
+            const search  = block.dataset.search;
+            const okStatus = (saStatusFilter === 'ALL' || status === saStatusFilter);
+            const okSearch = (!saSearchText || search.includes(saSearchText));
+            if (okStatus && okSearch) {
+                block.style.display = '';
+                visible++;
+            } else {
+                block.style.display = 'none';
+                // Also collapse detail if hidden
+                const id = block.querySelector('.bk-card').id.replace('card-','');
+                const panel = document.getElementById('detail-' + id);
+                if (panel) panel.classList.remove('open');
+            }
+        });
+        const noMatch = document.getElementById('sa-no-match');
+        if (noMatch) noMatch.style.display = (visible === 0 && blocks.length > 0) ? 'block' : 'none';
+    }
+</script>
+{% endblock %}

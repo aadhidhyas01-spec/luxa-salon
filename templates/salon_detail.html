@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ salon['name'] }} | Bangalore Luxury Salon Finder{% endblock %}
+
+{% block content %}
+    <!-- Cover Picture and Taglines -->
+    <header class="salon-hero-banner" style="background-image: url('{{ salon['image_path'] }}');">
+        <div class="salon-hero-info">
+            <div class="container">
+                <div class="salon-title-row">
+                    <div>
+                        <h1 class="salon-header-title">{{ salon['name'] }}</h1>
+                        <div class="salon-meta-tagline">
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                {{ salon['area'] }}, Bangalore
+                            </span>
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                                {{ salon['rating'] }} / 5.0 ({{ reviews|length }} Reviews)
+                            </span>
+                            <span>
+                                <span style="color: var(--primary); font-weight: 700;">{{ salon['price_range'] }}</span> Price Range
+                            </span>
+                        </div>
+                    </div>
+                    <div>
+                        <a href="#menu" class="btn btn-primary">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Detailed Split Grid -->
+    <section class="section-padding" id="menu">
+        <div class="container">
+            <div class="salon-detail-grid">
+                
+                <!-- Main Block: Services Menu & Reviews -->
+                <div>
+                    
+                    <!-- Services Tabs Menu -->
+                    <div class="services-section">
+                        <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Services Menu</h2>
+                        <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.95rem;">Select a premium service to schedule your appointment</p>
+                        
+                        <!-- Dynamic tabs header -->
+                        <div class="services-tabs">
+                            {% for category, services in categorized_services.items() %}
+                                <button class="tab-btn {% if loop.first %}active{% endif %}" onclick="switchTab(event, 'tab-{{ category|replace(' ', '-') }}')">
+                                    {{ category }}
+                                </button>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Tabs contents -->
+                        {% for category, services in categorized_services.items() %}
+                            <div class="tab-pane {% if loop.first %}active{% endif %}" id="tab-{{ category|replace(' ', '-') }}">
+                                {% for service in services %}
+                                    <div class="service-item">
+                                        <div class="service-info">
+                                            <h4>{{ service['name'] }}</h4>
+                                            <div class="service-duration">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                                {{ service['duration'] }} Minutes
+                                            </div>
+                                        </div>
+                                        <div class="service-pricing">
+                                            <div class="service-price">₹{{ "{:,}".format(service['price']) }}</div>
+                                            <a href="{{ url_for('book', service_id=service['id']) }}" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.8rem;">Book</a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Reviews Block -->
+                    <div class="reviews-section">
+                        <div class="reviews-header">
+                            <h2 style="font-size: 1.8rem;">Guest Reviews</h2>
+                            <span style="font-size: 1.1rem; color: var(--primary); font-weight: 600;">{{ salon['rating'] }} ★</span>
+                        </div>
+                        
+                        {% if reviews %}
+                            <div class="reviews-list">
+                                {% for review in reviews %}
+                                    <div class="review-item">
+                                        <div class="review-meta">
+                                            <span class="review-author">{{ review.get('user_name', 'Guest') }}</span>
+                                            <div class="review-rating">
+                                                {% for i in range(review['rating']) %}★{% endfor %}
+                                                {% for i in range(5 - review['rating']) %}<span style="color: var(--border-light)">★</span>{% endfor %}
+                                            </div>
+                                        </div>
+                                        <p class="review-comment">"{{ review['comment'] }}"</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p style="color: var(--text-secondary); text-align: center; padding: 2rem 0;">No reviews yet. Be the first to share your experience!</p>
+                        {% endif %}
+                        
+                        <!-- Review form -->
+                        <div class="review-form-box">
+                            <h3>Write a Review</h3>
+                            {% if current_user.is_authenticated %}
+                                <form action="{{ url_for('salon_detail', salon_id=salon['id']) }}" method="POST">
+                                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                                        <label>Rating</label>
+                                        <div class="star-rating-select">
+                                            <input type="radio" id="star5" name="rating" value="5" required><label for="star5" title="5 stars">★</label>
+                                            <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 stars">★</label>
+                                            <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 stars">★</label>
+                                            <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 stars">★</label>
+                                            <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 star">★</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                                        <label for="comment">Comment</label>
+                                        <textarea name="comment" id="comment" rows="4" class="form-control" placeholder="Share your experience at {{ salon['name'] }}..." required></textarea>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary" style="padding: 0.6rem 1.8rem; font-size: 0.85rem;">Submit Review</button>
+                                </form>
+                            {% else %}
+                                <div class="glass-panel" style="padding: 1.5rem; text-align: center;">
+                                    <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">You must be logged in to post reviews.</p>
+                                    <a href="{{ url_for('login', next=request.path) }}" class="btn btn-outline" style="padding: 0.5rem 1.2rem; font-size: 0.8rem;">Login to Review</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <!-- Sidebar Block: Details and Map Mock -->
+                <aside class="details-sidebar">
+                    
+                    <!-- Contacts & Hours Card -->
+                    <div class="info-card">
+                        <h3>Atelier Information</h3>
+                        
+                        <div class="info-list-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <div>
+                                <strong>Address</strong>
+                                <p style="color: var(--text-secondary); margin-top: 0.25rem;">{{ salon['name'] }} Building, {{ salon['area'] }} Road, Bangalore, KA - 560001</p>
+                            </div>
+                        </div>
+                        
+                        <div class="info-list-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            <div>
+                                <strong>Operating Hours</strong>
+                                <p style="color: var(--text-secondary); margin-top: 0.25rem;">Mon - Sun: 09:00 AM - 09:00 PM</p>
+                            </div>
+                        </div>
+                        
+                        <div class="info-list-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                            <div>
+                                <strong>Concierge Desk</strong>
+                                <p style="color: var(--text-secondary); margin-top: 0.25rem;">+91 80 4455 8899</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Overview Description -->
+                    <div class="info-card">
+                        <h3>About The Atelier</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem;">{{ salon['description'] }}</p>
+                    </div>
+                    
+                </aside>
+                
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function switchTab(evt, tabId) {
+            // Get all tab panes
+            const panes = document.getElementsByClassName('tab-pane');
+            for (let pane of panes) {
+                pane.classList.remove('active');
+            }
+            
+            // Get all tab buttons
+            const buttons = document.getElementsByClassName('tab-btn');
+            for (let button of buttons) {
+                button.classList.remove('active');
+            }
+            
+            // Show current tab, add active class to clicked button
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        // Star rating interactivity (clicking updates colors)
+        const ratingInputs = document.querySelectorAll('.star-rating-select input');
+        const ratingLabels = document.querySelectorAll('.star-rating-select label');
+
+        ratingInputs.forEach(input => {
+            input.addEventListener('change', (e) => {
+                const val = parseInt(e.target.value);
+                ratingLabels.forEach((label, idx) => {
+                    // Because label orders in reverse DOM (HTML definition):
+                    // label for star5 is index 0, star1 is index 4
+                    const labelVal = 5 - idx;
+                    if (labelVal <= val) {
+                        label.style.color = 'var(--primary)';
+                    } else {
+                        label.style.color = 'var(--text-secondary)';
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

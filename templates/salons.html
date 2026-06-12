@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}Salons Directory | LUXA SALON{% endblock %}
+
+{% block content %}
+    <section class="section-padding">
+        <div class="container">
+            <h1 class="section-title">The Ateliers Directory</h1>
+            <p class="section-subtitle">Refining your discovery of premium spaces</p>
+            
+            <!-- Main Grid: Sidebar + Cards -->
+            <div class="salons-layout">
+                
+                <!-- Filter Sidebar -->
+                <aside class="filter-sidebar">
+                    <form action="{{ url_for('salons') }}" method="GET" id="filter-form">
+                        
+                        <!-- Search Box inside sidebar -->
+                        <div class="filter-section">
+                            <h3 class="filter-title">Search</h3>
+                            <input type="text" name="search" value="{{ search_query }}" placeholder="Keyword, service, style..." class="form-control" style="width: 100%; font-size: 0.9rem;">
+                        </div>
+                        
+                        <!-- Area Checklist -->
+                        <div class="filter-section">
+                            <h3 class="filter-title">Neighborhoods</h3>
+                            {% for area in all_areas %}
+                                <label class="filter-checkbox-label">
+                                    <input type="checkbox" name="area" value="{{ area }}" {% if area in selected_areas %}checked{% endif %} onchange="document.getElementById('filter-form').submit()">
+                                    <span>{{ area }}</span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Price Options Checklist -->
+                        <div class="filter-section">
+                            <h3 class="filter-title">Price Ranges</h3>
+                            {% for price in ['₹₹', '₹₹₹', '₹₹₹₹'] %}
+                                <label class="filter-checkbox-label">
+                                    <input type="checkbox" name="price" value="{{ price }}" {% if price in selected_prices %}checked{% endif %} onchange="document.getElementById('filter-form').submit()">
+                                    <span>{{ price }}</span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Rating Options Checklist -->
+                        <div class="filter-section">
+                            <h3 class="filter-title">Minimum Rating</h3>
+                            <div class="filter-radio-group">
+                                <label class="filter-radio-label">
+                                    <input type="radio" name="rating" value="" {% if not min_rating %}checked{% endif %} onchange="document.getElementById('filter-form').submit()">
+                                    <span>All Ratings</span>
+                                </label>
+                                <label class="filter-radio-label">
+                                    <input type="radio" name="rating" value="4.8" {% if min_rating == 4.8 %}checked{% endif %} onchange="document.getElementById('filter-form').submit()">
+                                    <span>4.8★ & Above</span>
+                                </label>
+                                <label class="filter-radio-label">
+                                    <input type="radio" name="rating" value="4.7" {% if min_rating == 4.7 %}checked{% endif %} onchange="document.getElementById('filter-form').submit()">
+                                    <span>4.7★ & Above</span>
+                                </label>
+                                <label class="filter-radio-label">
+                                    <input type="radio" name="rating" value="4.5" {% if min_rating == 4.5 %}checked{% endif %} onchange="document.getElementById('filter-form').submit()">
+                                    <span>4.5★ & Above</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <a href="{{ url_for('salons') }}" class="btn btn-secondary" style="width: 100%; text-align: center; font-size: 0.8rem; padding: 0.6rem 0;">Clear Filters</a>
+                    </form>
+                </aside>
+                
+                <!-- Main Salons Listings List -->
+                <main class="salons-results">
+                    {% if salons %}
+                        <div class="salon-grid">
+                            {% for salon in salons %}
+                                <article class="salon-card">
+                                    <div class="card-img-wrapper">
+                                        <img src="{{ salon['image_path'] }}" alt="{{ salon['name'] }}">
+                                        <div class="card-badge">{{ salon['price_range'] }}</div>
+                                        <div class="card-rating">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                                            <span>{{ salon['rating'] }}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card-content">
+                                        <h3 class="card-title">{{ salon['name'] }}</h3>
+                                        <div class="card-info">
+                                            <span>{{ salon['area'] }}</span>
+                                            <span>Premium Services</span>
+                                        </div>
+                                        <p class="card-desc">{{ salon['description'] }}</p>
+                                        
+                                        <div class="card-footer">
+                                            <a href="{{ url_for('salon_detail', salon_id=salon['id']) }}" class="btn btn-outline" style="width: 100%; text-align: center;">Explore Menu</a>
+                                        </div>
+                                    </div>
+                                </article>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="glass-panel" style="padding: 4rem; text-align: center; border: 1px dashed var(--border-light);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary); margin-bottom: 1.5rem;"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                            <h3 style="margin-bottom: 0.5rem; font-family: var(--font-body); font-size: 1.3rem;">No Premium Ateliers Found</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 2rem;">No salons matched your filters or search keywords. Adjust your filters or reset to view all listings.</p>
+                            <a href="{{ url_for('salons') }}" class="btn btn-primary">Reset Filters</a>
+                        </div>
+                    {% endif %}
+                </main>
+                
+            </div>
+        </div>
+    </section>
+{% endblock %}
