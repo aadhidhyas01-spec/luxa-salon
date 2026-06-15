@@ -91,7 +91,7 @@ def seed_data():
         name="The Grand Silhouette",
         area="Indiranagar",
         rating=4.9,
-        price_range="₹₹₹₹",
+        price_range="$$$$",
         description="An ultra-exclusive grooming atelier offering bespoke hair couture, restorative clinical skincare, and luxury holistic therapy under the guidance of internationally certified art directors.",
         image_path="/static/images/salon_1.png"
     )
@@ -100,7 +100,7 @@ def seed_data():
         name="En Vogue Atelier",
         area="Lavelle Road",
         rating=4.8,
-        price_range="₹₹₹₹",
+        price_range="$$$$",
         description="Nestled in Bangalore's premier luxury district, En Vogue Atelier features global runway stylists, personalized aesthetics consulting, and premium organic spa treatments within a private, gold-trimmed sanctuary.",
         image_path="/static/images/salon_2.png"
     )
@@ -109,7 +109,7 @@ def seed_data():
         name="Aura Wellness & Styling",
         area="Koramangala",
         rating=4.7,
-        price_range="₹₹₹",
+        price_range="$$$",
         description="A contemporary glass-walled sanctuary of modern styling and tranquil wellness. Specializing in advanced hair transformations, botanical scalp therapies, and high-fashion nail couture.",
         image_path="/static/images/salon_3.png"
     )
@@ -118,7 +118,7 @@ def seed_data():
         name="Prism & Polish",
         area="Sadashivanagar",
         rating=4.6,
-        price_range="₹₹₹",
+        price_range="$$$",
         description="A premium beauty boutique focusing on luxury manicures, advanced lash techniques, rejuvenating facial therapy, and custom bridal transformations using global beauty brands.",
         image_path="/static/images/salon_4.png"
     )

@@ -35,7 +35,7 @@
                         <!-- Price Options Checklist -->
                         <div class="filter-section">
                             <h3 class="filter-title">Price Ranges</h3>
-                            {% for price in ['₹₹', '₹₹₹', '₹₹₹₹'] %}
+                            {% for price in ['$1000', '$1200', '$1500', '$2000'] %}
                                 <label class="filter-checkbox-label">
                                     <input type="checkbox" name="price" value="{{ price }}" {% if price in selected_prices %}checked{% endif %} onchange="document.getElementById('filter-form').submit()">
                                     <span>{{ price }}</span>

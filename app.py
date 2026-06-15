@@ -258,7 +258,7 @@ def signup():
     new_user = db.create_user(name, email, pw_hash, phone)
     if new_user:
         login_user(new_user)
-        flash("Registration successful! Welcome to Salon Lux.", "success")
+        flash("Registration successful! Welcome to LUXA SALON.", "success")
         return redirect(url_for('dashboard'))
     else:
         flash("Registration failed. Please try again.", "danger")
@@ -291,7 +291,7 @@ def admin():
         if action == 'add_salon':
             name        = request.form.get('name', '').strip()
             area        = request.form.get('area', '').strip()
-            price_range = request.form.get('price_range', '₹₹')
+            price_range = request.form.get('price_range', '$$')
             description = request.form.get('description', '').strip()
 
             if name and area:
@@ -348,4 +348,4 @@ def salon_admin(salon_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)

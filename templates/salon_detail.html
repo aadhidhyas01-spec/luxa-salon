@@ -67,7 +67,7 @@
                                             </div>
                                         </div>
                                         <div class="service-pricing">
-                                            <div class="service-price">₹{{ "{:,}".format(service['price']) }}</div>
+                                            <div class="service-price">${{ "{:,}".format(service['price']) }}</div>
                                             <a href="{{ url_for('book', service_id=service['id']) }}" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.8rem;">Book</a>
                                         </div>
                                     </div>

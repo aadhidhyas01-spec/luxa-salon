@@ -30,7 +30,7 @@ class Salon(db.Model):
     name = db.Column(db.String(100), nullable=False)
     area = db.Column(db.String(100), nullable=False)
     rating = db.Column(db.Float, default=5.0)
-    price_range = db.Column(db.String(10), default='₹₹')
+    price_range = db.Column(db.String(10), default='$$')
     description = db.Column(db.Text, nullable=True)
     image_path = db.Column(db.String(256), nullable=True)
     

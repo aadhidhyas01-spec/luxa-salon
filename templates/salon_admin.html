@@ -432,7 +432,7 @@
                 <div class="stat-label">Cancelled</div>
             </div>
             <div class="stat-cell">
-                <div class="stat-number">₹{{ "{:,}".format(ns.revenue) }}</div>
+                <div class="stat-number">${{ "{:,}".format(ns.revenue) }}</div>
                 <div class="stat-label">Confirmed Revenue</div>
             </div>
         </div>
@@ -500,7 +500,7 @@
                     </div>
 
                     <!-- Price -->
-                    <div class="bk-price">₹{{ "{:,}".format(b.service_price) }}</div>
+                    <div class="bk-price">${{ "{:,}".format(b.service_price) }}</div>
 
                     <!-- Status badge -->
                     <div>
@@ -536,7 +536,7 @@
                             <div class="detail-row"><strong>Stylist</strong>{{ b.stylist }}</div>
                             <div class="detail-row"><strong>Date</strong>{{ b.date }}</div>
                             <div class="detail-row"><strong>Time</strong>{{ b.time }}</div>
-                            <div class="detail-row"><strong>Price</strong>₹{{ "{:,}".format(b.service_price) }}</div>
+                            <div class="detail-row"><strong>Price</strong>${{ "{:,}".format(b.service_price) }}</div>
                         </div>
                         <div class="detail-group">
                             <h5>📋 Booking Status</h5>

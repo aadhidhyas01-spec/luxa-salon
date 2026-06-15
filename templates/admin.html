@@ -280,7 +280,7 @@
             <div class="metrics-grid">
                 <div class="metric-card">
                     <div class="metric-title">Total Revenue</div>
-                    <div class="metric-value">₹{{ "{:,}".format(ns.total_revenue) }}</div>
+                    <div class="metric-value">${{ "{:,}".format(ns.total_revenue) }}</div>
                     <div class="metric-subtitle">From {{ ns.confirmed_count }} confirmed bookings</div>
                 </div>
                 <div class="metric-card">
@@ -383,7 +383,7 @@
                                                 <strong>{{ booking.date }}</strong>
                                                 <div class="client-subtext">{{ booking.time }}</div>
                                             </td>
-                                            <td><span class="price-text">₹{{ "{:,}".format(booking.service_price) }}</span></td>
+                                            <td><span class="price-text">${{ "{:,}".format(booking.service_price) }}</span></td>
                                             <td>
                                                 <span class="status-badge status-{{ booking.status|lower }}">
                                                     {{ booking.status }}
@@ -435,7 +435,7 @@
                                                                 <li><strong>Service:</strong> {{ booking.service_name }}</li>
                                                                 <li><strong>Stylist:</strong> {{ booking.stylist }}</li>
                                                                 <li><strong>Schedule:</strong> {{ booking.date }} at {{ booking.time }}</li>
-                                                                <li><strong>Base Price:</strong> ₹{{ "{:,}".format(booking.service_price) }}</li>
+                                                                <li><strong>Base Price:</strong> ${{ "{:,}".format(booking.service_price) }}</li>
                                                             </ul>
                                                         </div>
                                                         <div class="details-section status-control">
@@ -496,11 +496,12 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="new-price">Price Tier Badge</label>
+                                    <label for="new-price">Price Category</label>
                                     <select name="price_range" id="new-price" class="form-control">
-                                        <option value="₹₹">₹₹ (Moderate)</option>
-                                        <option value="₹₹₹">₹₹₹ (Premium)</option>
-                                        <option value="₹₹₹₹">₹₹₹₹ (Ultra Luxury)</option>
+                                        <option value="$1000">$1000 (Standard)</option>
+                                        <option value="$1200">$1200 (Premium)</option>
+                                        <option value="$1500">$1500 (Luxury)</option>
+                                        <option value="$2000">$2000 (Ultra Luxury)</option>
                                     </select>
                                 </div>
                                 

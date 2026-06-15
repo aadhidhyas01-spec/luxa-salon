@@ -44,9 +44,9 @@
                                         <strong style="display: block; font-size: 1rem; color: var(--text-primary);">{{ stylist }}</strong>
                                         <span style="font-size: 0.8rem; color: var(--text-secondary);">
                                             {% if 'Director' in stylist %}
-                                                Art Directors have over 10 years of runway and editorial expertise (+₹500 on checkout)
+                                                Art Directors have over 10 years of runway and editorial expertise (+$500 on checkout)
                                             {% elif 'Senior' in stylist %}
-                                                Senior Stylists have over 5 years of precision craft experience (+₹200 on checkout)
+                                                Senior Stylists have over 5 years of precision craft experience (+$200 on checkout)
                                             {% elif 'Consultant' in stylist %}
                                                 Creative consultants offer advanced style customizations
                                             {% else %}
@@ -119,19 +119,19 @@
                             </div>
                             <div class="summary-row" style="margin-top: 0.5rem; border-top: 1px dashed var(--border-light); padding-top: 0.5rem;">
                                 <span>Service Base Price</span>
-                                <strong>₹{{ "{:,}".format(service['price']) }}</strong>
+                                <strong>${{ "{:,}".format(service['price']) }}</strong>
                             </div>
                             <div class="summary-row">
                                 <span>Stylist Premium Fee</span>
-                                <strong id="summary-stylist-fee">₹0</strong>
+                                <strong id="summary-stylist-fee">$0</strong>
                             </div>
                             <div class="summary-row">
                                 <span>Taxes & GST (18%)</span>
-                                <strong id="summary-tax">₹0</strong>
+                                <strong id="summary-tax">$0</strong>
                             </div>
                             <div class="summary-row total">
                                 <span>Grand Total (Pay at Salon)</span>
-                                <span id="summary-total">₹{{ "{:,}".format(service['price']) }}</span>
+                                <span id="summary-total">${{ "{:,}".format(service['price']) }}</span>
                             </div>
                         </div>
                         
@@ -209,9 +209,9 @@
                 const tax = Math.round((basePrice + stylistFee) * 0.18);
                 const grandTotal = basePrice + stylistFee + tax;
                 
-                document.getElementById('summary-stylist-fee').innerText = `₹${stylistFee.toLocaleString('en-IN')}`;
-                document.getElementById('summary-tax').innerText = `₹${tax.toLocaleString('en-IN')}`;
-                document.getElementById('summary-total').innerText = `₹${grandTotal.toLocaleString('en-IN')}`;
+                document.getElementById('summary-stylist-fee').innerText = `$${stylistFee.toLocaleString('en-US')}`;
+                document.getElementById('summary-tax').innerText = `$${tax.toLocaleString('en-US')}`;
+                document.getElementById('summary-total').innerText = `$${grandTotal.toLocaleString('en-US')}`;
             }
 
             // Move step UI
