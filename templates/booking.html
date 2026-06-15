@@ -156,7 +156,7 @@
         document.getElementById('date').value = today;
 
         let currentStep = 1;
-        const basePrice = {{ service['price'] }};
+        const basePrice = Number('{{ service["price"] }}');
 
         function selectTime(timeStr) {
             document.getElementById('selected-time').value = timeStr;

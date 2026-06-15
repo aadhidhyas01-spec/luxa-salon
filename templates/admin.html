@@ -369,7 +369,7 @@
                                 <tbody>
                                     {% for booking in bookings %}
                                         <!-- Main Row -->
-                                        <tr class="booking-row" id="booking-row-{{ booking.id }}" onclick="toggleBookingDetails({{ booking.id }})" data-status="{{ booking.status|upper }}" data-search="{{ booking.user_name|lower }} {{ booking.user_email|lower }} {{ booking.user_phone|lower }} {{ booking.salon_name|lower }} {{ booking.service_name|lower }} {{ booking.stylist|lower }}">
+                                        <tr class="booking-row" id="booking-row-{{ booking.id }}" data-id="{{ booking.id }}" onclick="toggleBookingDetails(this)" data-status="{{ booking.status|upper }}" data-search="{{ booking.user_name|lower }} {{ booking.user_email|lower }} {{ booking.user_phone|lower }} {{ booking.salon_name|lower }} {{ booking.service_name|lower }} {{ booking.stylist|lower }}">
                                             <td><strong>#{{ booking.id }}</strong></td>
                                             <td>
                                                 <div class="client-name">{{ booking.user_name }}</div>
@@ -624,7 +624,8 @@
             evt.currentTarget.parentElement.classList.add('active');
         }
 
-        function toggleBookingDetails(bookingId) {
+        function toggleBookingDetails(rowOrId) {
+            const bookingId = typeof rowOrId === 'object' ? rowOrId.getAttribute('data-id') : rowOrId;
             const detailsRow = document.getElementById(`details-row-${bookingId}`);
             const bookingRow = document.getElementById(`booking-row-${bookingId}`);
             
