@@ -3,89 +3,310 @@
 {% block title %}LUXA SALON | Premium Salons & Spas in Bangalore{% endblock %}
 
 {% block content %}
-    <!-- Hero Header -->
+
+    <!-- ── HERO ── -->
     <header class="hero" style="background-image: url('{{ url_for('static', filename='images/salon_hero.png') }}');">
         <div class="hero-content">
-            <h1>Discover Premium <span>Self-Care</span></h1>
-            <p>Book exclusive treatments at Bangalore's top-rated luxury grooming sanctuaries</p>
-            
-            <!-- Hero Search Form -->
-            <form action="{{ url_for('salons') }}" method="GET" class="search-container glass-panel">
+            <div class="hero-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                Bangalore's No.1 Luxury Salon Finder
+            </div>
+
+            <h1>
+                Discover Premium <span class="gold italic">Self-Care</span><br>
+                in Bangalore
+            </h1>
+
+            <p class="hero-desc">Book exclusive treatments at Bangalore's most celebrated luxury salons, wellness sanctuaries, and grooming ateliers.</p>
+
+            <!-- Hero Search -->
+            <form action="{{ url_for('salons') }}" method="GET" class="search-container">
                 <div class="search-input-group">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                     <input type="text" name="search" placeholder="Search salons, treatments, or styles..." aria-label="Search">
                 </div>
-                
                 <div class="search-input-group">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                     <select name="area" aria-label="Area">
-                        <option value="">All Areas (Bangalore)</option>
+                        <option value="">All Areas — Bangalore</option>
                         {% for area in all_areas %}
                             <option value="{{ area }}">{{ area }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                
-                <button type="submit" class="btn btn-primary">Find Salons</button>
+                <button type="submit" class="btn btn-primary">Explore</button>
             </form>
+
+            <!-- Hero quick stats -->
+            <div class="hero-stats">
+                <div>
+                    <div class="hero-stat-number">4+</div>
+                    <div class="hero-stat-label">Premium Salons</div>
+                </div>
+                <div>
+                    <div class="hero-stat-number">20+</div>
+                    <div class="hero-stat-label">Expert Stylists</div>
+                </div>
+                <div>
+                    <div class="hero-stat-number">100+</div>
+                    <div class="hero-stat-label">Luxury Services</div>
+                </div>
+                <div>
+                    <div class="hero-stat-number">5K+</div>
+                    <div class="hero-stat-label">Happy Clients</div>
+                </div>
+            </div>
         </div>
     </header>
 
-    <!-- Neighborhood / Area Highlights -->
-    <section class="section-padding">
+    <!-- ── HOW IT WORKS ── -->
+    <section class="how-it-works section-padding">
         <div class="container text-center">
-            <h2 class="section-title">Explore Elite Districts</h2>
-            <p class="section-subtitle">Premium grooming near you</p>
-            
-            <div class="quick-filter-container">
-                {% for area in all_areas %}
-                    <a href="{{ url_for('salons', area=area) }}" class="quick-filter-btn">
-                        {{ area }}
-                    </a>
-                {% endfor %}
+            <span class="section-label">Simple & Seamless</span>
+            <h2 class="section-title">Book in Three Steps</h2>
+            <div class="divider center"></div>
+
+            <div class="steps-grid reveal">
+                <div class="step-card reveal reveal-delay-1">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">🔍</div>
+                    <h3>Discover</h3>
+                    <p>Browse our curated collection of Bangalore's finest luxury salons, filter by area, price and rating.</p>
+                </div>
+                <div class="step-card reveal reveal-delay-2">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">📅</div>
+                    <h3>Book</h3>
+                    <p>Select your service, preferred stylist and time slot. Instant booking confirmation, no calls needed.</p>
+                </div>
+                <div class="step-card reveal reveal-delay-3">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">✨</div>
+                    <h3>Indulge</h3>
+                    <p>Arrive and experience unmatched luxury treatments by award-winning art directors and stylists.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Featured Salons Showcase -->
-    <section class="section-padding" style="background-color: var(--bg-surface); border-top: 1px solid var(--border-light);">
+    <!-- ── NEIGHBORHOODS ── -->
+    <section class="section-padding">
         <div class="container">
-            <div class="text-center">
-                <h2 class="section-title">Sanctuaries of Elegance</h2>
-                <p class="section-subtitle">Our featured luxury recommendations</p>
+            <div class="text-center reveal">
+                <span class="section-label">Explore the City</span>
+                <h2 class="section-title">Elite Districts</h2>
+                <p class="section-subtitle" style="margin:0 auto 3rem;">Premium grooming destinations across Bangalore's finest neighbourhoods</p>
             </div>
-            
+
+            <div class="neighborhood-grid reveal">
+                <a href="{{ url_for('salons', area='Indiranagar') }}" class="neighborhood-card reveal reveal-delay-1">
+                    <img src="{{ url_for('static', filename='images/salon_1.png') }}" alt="Indiranagar">
+                    <span class="neighborhood-tag">Salons Available</span>
+                    <div class="neighborhood-info">
+                        <h3>Indiranagar</h3>
+                        <p>Explore Salons →</p>
+                    </div>
+                </a>
+                <a href="{{ url_for('salons', area='Lavelle Road') }}" class="neighborhood-card reveal reveal-delay-2">
+                    <img src="{{ url_for('static', filename='images/salon_2.png') }}" alt="Lavelle Road">
+                    <span class="neighborhood-tag">Salons Available</span>
+                    <div class="neighborhood-info">
+                        <h3>Lavelle Road</h3>
+                        <p>Explore Salons →</p>
+                    </div>
+                </a>
+                <a href="{{ url_for('salons', area='Koramangala') }}" class="neighborhood-card reveal reveal-delay-3">
+                    <img src="{{ url_for('static', filename='images/salon_3.png') }}" alt="Koramangala">
+                    <span class="neighborhood-tag">Salons Available</span>
+                    <div class="neighborhood-info">
+                        <h3>Koramangala</h3>
+                        <p>Explore Salons →</p>
+                    </div>
+                </a>
+                <a href="{{ url_for('salons', area='Sadashivanagar') }}" class="neighborhood-card reveal reveal-delay-4">
+                    <img src="{{ url_for('static', filename='images/salon_4.png') }}" alt="Sadashivanagar">
+                    <span class="neighborhood-tag">Salons Available</span>
+                    <div class="neighborhood-info">
+                        <h3>Sadashivanagar</h3>
+                        <p>Explore Salons →</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── FEATURED SALONS ── -->
+    <section class="section-padding" style="background:var(--bg-surface); border-top:1px solid var(--border-light);">
+        <div class="container">
+            <div class="text-center reveal">
+                <span class="section-label">Curated For You</span>
+                <h2 class="section-title">Sanctuaries of Elegance</h2>
+                <div class="divider center"></div>
+                <p class="section-subtitle" style="margin:0 auto 3rem;">Our featured luxury recommendations this season</p>
+            </div>
+
             <div class="salon-grid">
                 {% for salon in featured_salons %}
-                    <article class="salon-card">
+                    <article class="salon-card reveal reveal-delay-{{ loop.index }}">
                         <div class="card-img-wrapper">
-                            <img src="{{ salon['image_path'] }}" alt="{{ salon['name'] }}">
+                            <img src="{{ salon['image_path'] }}" alt="{{ salon['name'] }}" loading="lazy">
                             <div class="card-badge">{{ salon['price_range'] }}</div>
                             <div class="card-rating">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                                 <span>{{ salon['rating'] }}</span>
                             </div>
                         </div>
-                        
                         <div class="card-content">
                             <h3 class="card-title">{{ salon['name'] }}</h3>
                             <div class="card-info">
-                                <span>{{ salon['area'] }}</span>
+                                <span class="card-area">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                    {{ salon['area'] }}
+                                </span>
                                 <span>Premium Services</span>
                             </div>
                             <p class="card-desc">{{ salon['description'] }}</p>
-                            
                             <div class="card-footer">
-                                <a href="{{ url_for('salon_detail', salon_id=salon['id']) }}" class="btn btn-outline" style="width: 100%; text-align: center;">View Atelier</a>
+                                <a href="{{ url_for('salon_detail', salon_id=salon['id']) }}" class="btn btn-outline" style="width:100%; justify-content:center;">View Atelier</a>
                             </div>
                         </div>
                     </article>
                 {% endfor %}
             </div>
-            
-            <div class="text-center" style="margin-top: 4rem;">
-                <a href="{{ url_for('salons') }}" class="btn btn-primary">Browse All Salons</a>
+
+            <div class="text-center reveal" style="margin-top:3.5rem;">
+                <a href="{{ url_for('salons') }}" class="btn btn-primary btn-lg">Browse All Salons</a>
             </div>
         </div>
     </section>
+
+    <!-- ── TESTIMONIALS ── -->
+    <section class="testimonials-section section-padding">
+        <div class="container">
+            <div class="text-center reveal">
+                <span class="section-label">What Clients Say</span>
+                <h2 class="section-title">Loved by Thousands</h2>
+                <div class="divider center"></div>
+            </div>
+
+            <div class="testimonials-carousel reveal" id="testimonials-carousel">
+                <div class="testimonials-track" id="testimonials-track">
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">★★★★★</div>
+                        <p class="testimonial-text">"Absolutely top-notch! The Royal Signature Haircut was incredible. The stylists understand luxury, and the ambiance makes you feel like royalty. Worth every penny."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">A</div>
+                            <div>
+                                <div class="author-name">Aarav Sharma</div>
+                                <div class="author-salon">The Grand Silhouette</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">★★★★★</div>
+                        <p class="testimonial-text">"En Vogue Atelier is the best in Bangalore. Loved the HydraFacial Elite — my skin is absolutely glowing. Extremely professional staff and stunning private rooms."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">P</div>
+                            <div>
+                                <div class="author-name">Priya Menon</div>
+                                <div class="author-salon">En Vogue Atelier</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">★★★★★</div>
+                        <p class="testimonial-text">"The Keratin treatment at Aura Wellness did wonders to my frizzy hair. Very peaceful ambiance and beautiful glass interiors. Highly recommend for a full day of self-care!"</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">R</div>
+                            <div>
+                                <div class="author-name">Riya Kapoor</div>
+                                <div class="author-salon">Aura Wellness & Styling</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">★★★★☆</div>
+                        <p class="testimonial-text">"Lovely nail art work at Prism & Polish. A bit busy on weekends, but the wait was absolutely worth it. The chrome nail extensions are stunning. Will definitely visit again!"</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">S</div>
+                            <div>
+                                <div class="author-name">Sneha Rao</div>
+                                <div class="author-salon">Prism & Polish</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-controls">
+                <button class="carousel-btn" id="prev-btn" onclick="changeSlide(-1)" aria-label="Previous">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <div class="carousel-dots" id="carousel-dots">
+                    <div class="carousel-dot active" onclick="goToSlide(0)"></div>
+                    <div class="carousel-dot" onclick="goToSlide(1)"></div>
+                </div>
+                <button class="carousel-btn" id="next-btn" onclick="changeSlide(1)" aria-label="Next">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── CTA BANNER ── -->
+    <section class="cta-banner reveal">
+        <div class="container">
+            <span class="section-label">Ready to Indulge?</span>
+            <h2 class="section-title">Your Premium Experience Awaits</h2>
+            <p>Join thousands of clients who trust LUXA SALON for discovering Bangalore's finest beauty destinations.</p>
+            {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Create Free Account</a>
+            {% else %}
+                <a href="{{ url_for('salons') }}" class="btn btn-primary btn-lg">Book a Session</a>
+            {% endif %}
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Testimonials Carousel
+    let currentSlide = 0;
+    const track = document.getElementById('testimonials-track');
+    const dots = document.querySelectorAll('.carousel-dot');
+
+    function getSlidesPerView() {
+        return window.innerWidth <= 768 ? 1 : 3;
+    }
+
+    function updateCarousel() {
+        const slidesPerView = getSlidesPerView();
+        const totalCards = track.children.length;
+        const maxSlide = Math.ceil(totalCards / slidesPerView) - 1;
+        if (currentSlide > maxSlide) currentSlide = maxSlide;
+
+        const cardWidth = track.children[0].offsetWidth + 32; // card + gap
+        track.style.transform = `translateX(-${currentSlide * cardWidth * slidesPerView}px)`;
+
+        dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+    }
+
+    function changeSlide(dir) {
+        const slidesPerView = getSlidesPerView();
+        const totalCards = track.children.length;
+        const maxSlide = Math.ceil(totalCards / slidesPerView) - 1;
+        currentSlide = Math.max(0, Math.min(maxSlide, currentSlide + dir));
+        updateCarousel();
+    }
+
+    function goToSlide(n) {
+        currentSlide = n;
+        updateCarousel();
+    }
+
+    // Auto-slide every 5 seconds
+    setInterval(() => changeSlide(1), 5000);
+    window.addEventListener('resize', updateCarousel);
+</script>
 {% endblock %}

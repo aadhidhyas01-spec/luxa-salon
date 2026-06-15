@@ -3,92 +3,100 @@
 {% block title %}Sign In / Register | LUXA SALON{% endblock %}
 
 {% block content %}
-    <section class="auth-container flex-center">
-        <div class="container">
-            <div class="auth-card glass-panel">
-                
-                <!-- Brand Left Banner Column -->
-                <div class="auth-hero" style="background-image: url('{{ url_for('static', filename='images/salon_hero.png') }}');">
-                    <div class="auth-hero-content">
-                        <h2>Experience Luxury</h2>
-                        <p style="color: var(--text-secondary);">Unlock customized wellness tracking, stylist matching, and priority booking alerts across Bangalore's premier ateliers.</p>
+<section class="auth-container">
+    <div class="auth-card glass-panel">
+
+        <!-- Left: Brand Image -->
+        <div class="auth-hero" style="background-image: url('{{ url_for('static', filename='images/salon_hero.png') }}');">
+            <div class="auth-hero-content">
+                <span class="section-label">Welcome Back</span>
+                <h2>Experience True Luxury</h2>
+                <p>Unlock personalized wellness tracking, stylist matching, and priority booking alerts across Bangalore's premier ateliers.</p>
+                <div style="margin-top:2rem; display:flex; gap:2rem;">
+                    <div>
+                        <div style="font-family:var(--font-heading); font-size:1.5rem; color:var(--primary); font-weight:700;">4+</div>
+                        <div style="font-size:0.78rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.08em;">Salons</div>
+                    </div>
+                    <div>
+                        <div style="font-family:var(--font-heading); font-size:1.5rem; color:var(--primary); font-weight:700;">5K+</div>
+                        <div style="font-size:0.78rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.08em;">Clients</div>
+                    </div>
+                    <div>
+                        <div style="font-family:var(--font-heading); font-size:1.5rem; color:var(--primary); font-weight:700;">100+</div>
+                        <div style="font-size:0.78rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.08em;">Services</div>
                     </div>
                 </div>
-                
-                <!-- Forms Right Column -->
-                <div class="auth-form-box">
-                    <div class="auth-tabs">
-                        <button class="auth-tab-btn active" onclick="switchAuthTab(event, 'login-form')">Sign In</button>
-                        <button class="auth-tab-btn" onclick="switchAuthTab(event, 'signup-form')">Register</button>
-                    </div>
-                    
-                    <!-- Login Form -->
-                    <form action="{{ url_for('login', next=request.args.get('next', '')) }}" method="POST" class="auth-form active" id="login-form">
-                        <div class="form-group">
-                            <label for="login-email">Email Address</label>
-                            <input type="email" name="email" id="login-email" class="form-control" placeholder="name@example.com" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="login-password">Password</label>
-                            <input type="password" name="password" id="login-password" class="form-control" placeholder="Enter password" required>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary" style="margin-top: 1rem; width: 100%;">Sign In</button>
-                        <div style="margin-top: 1rem; text-align: center;">
-                            <a href="{{ url_for('login', next='admin/select') }}" class="btn btn-primary" style="font-size:0.85rem; padding:0.4rem 0.8rem;">Admin Login</a>
-                        </div>
-                    </form>
-                    
-                    <!-- Signup Form -->
-                    <form action="{{ url_for('signup') }}" method="POST" class="auth-form" id="signup-form">
-                        <div class="form-group">
-                            <label for="reg-name">Full Name</label>
-                            <input type="text" name="name" id="reg-name" class="form-control" placeholder="Aarav Sharma" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="reg-email">Email Address</label>
-                            <input type="email" name="email" id="reg-email" class="form-control" placeholder="aarav@example.com" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="reg-phone">Phone Number</label>
-                            <input type="tel" name="phone" id="reg-phone" class="form-control" placeholder="+91 99887 76655" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="reg-password">Password</label>
-                            <input type="password" name="password" id="reg-password" class="form-control" placeholder="Create strong password" required>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary" style="margin-top: 1rem; width: 100%;">Create Account</button>
-                    </form>
-                    
-                </div>
-                
             </div>
         </div>
-    </section>
+
+        <!-- Right: Forms -->
+        <div class="auth-form-box">
+            <div style="margin-bottom:2rem;">
+                <div class="logo-brand" style="font-size:1.4rem; margin-bottom:0.5rem;">LUXA<span>SALON</span></div>
+                <p style="font-size:0.85rem; color:var(--text-secondary);">Join 5,000+ clients who trust LUXA for premium beauty.</p>
+            </div>
+
+            <div class="auth-tabs">
+                <button class="auth-tab-btn active" id="tab-login" onclick="switchAuthTab(event, 'login-form')">Sign In</button>
+                <button class="auth-tab-btn" id="tab-signup" onclick="switchAuthTab(event, 'signup-form')">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <form action="{{ url_for('login', next=request.args.get('next', '')) }}" method="POST" class="auth-form active" id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" name="email" id="login-email" class="form-control" placeholder="name@example.com" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" name="password" id="login-password" class="form-control" placeholder="Enter your password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem; justify-content:center;">Sign In</button>
+
+                <div style="margin-top:1.25rem; text-align:center;">
+                    <span style="font-size:0.82rem; color:var(--text-secondary);">Are you an admin? </span>
+                    <a href="{{ url_for('login', next='/admin/select') }}" style="font-size:0.82rem; color:var(--primary); font-weight:600;">Admin Login →</a>
+                </div>
+            </form>
+
+            <!-- Signup Form -->
+            <form action="{{ url_for('signup') }}" method="POST" class="auth-form" id="signup-form">
+                <div class="form-group">
+                    <label for="reg-name">Full Name</label>
+                    <input type="text" name="name" id="reg-name" class="form-control" placeholder="Aarav Sharma" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-email">Email Address</label>
+                    <input type="email" name="email" id="reg-email" class="form-control" placeholder="aarav@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-phone">Phone Number</label>
+                    <input type="tel" name="phone" id="reg-phone" class="form-control" placeholder="+91 99887 76655">
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Password</label>
+                    <input type="password" name="password" id="reg-password" class="form-control" placeholder="Create a strong password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem; justify-content:center;">Create Account</button>
+            </form>
+        </div>
+
+    </div>
+</section>
 {% endblock %}
 
 {% block scripts %}
-    <script>
-        function switchAuthTab(evt, formId) {
-            // Remove active classes
-            const forms = document.getElementsByClassName('auth-form');
-            for (let form of forms) {
-                form.classList.remove('active');
-            }
-            
-            const buttons = document.getElementsByClassName('auth-tab-btn');
-            for (let btn of buttons) {
-                btn.classList.remove('active');
-            }
-            
-            // Activate selection
-            document.getElementById(formId).classList.add('active');
-            evt.currentTarget.classList.add('active');
-        }
-    </script>
+<script>
+    function switchAuthTab(evt, formId) {
+        document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+        document.querySelectorAll('.auth-tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(formId).classList.add('active');
+        evt.currentTarget.classList.add('active');
+    }
+
+    // Auto-open register tab if URL has #register
+    if (window.location.hash === '#register') {
+        document.getElementById('tab-signup').click();
+    }
+</script>
 {% endblock %}
